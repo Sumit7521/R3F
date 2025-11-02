@@ -1,7 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Hero } from "./Hero";
+import { Canvas } from "@react-three/fiber";
+import {Hero3D} from "./Hero3D"
+import {Services3D} from "./Services3D"
+import {TeamMember} from "./TeamMember"
+import {Portfolio3D} from "./Portfolio3D"
+import { Environment, View } from "@react-three/drei";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 export const HomePage = () => {
+
+  const container = useRef()
+  const heroContainer = useRef()
+  const serviceContainer = useRef()
+  const johnContainer = useRef()
+  const juliaContainer = useRef()
+  const lindaContainer = useRef()
+  const portfolioContainer = useRef()
+
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => {
@@ -15,7 +31,47 @@ export const HomePage = () => {
   const [currentService, setCurrentService] = useState(0);
 
   return (
-    <main>
+    <main ref={container}>
+      <Canvas className="canvas" camera={{
+        position:[0,0,1.5],
+        fov:30
+      }}
+      eventSource={container}
+      >
+        <View track={heroContainer}>
+          <Hero3D />
+        </View>
+        <View track={serviceContainer}>
+          <Services3D currentService={currentService} />
+        </View>
+        <View track={johnContainer}>
+          <TeamMember 
+            model="Suit"
+            position-y={-1.5}
+            rotation-y={-degToRad(20)}
+          />
+        <Environment preset="sunset" />
+        </View>
+        <View track={juliaContainer}>
+          <TeamMember 
+            model="Formal"
+            position-y={-1.5}
+            rotation-y={-degToRad(20)}
+          />
+        <Environment preset="sunset" />
+        </View>
+        <View track={lindaContainer}>
+          <TeamMember 
+            model="Casual"
+            position-y={-1.5}
+            rotation-y={-degToRad(20)}
+          />
+        <Environment preset="sunset" />
+        </View>
+        <View track={portfolioContainer}>
+          <Portfolio3D />
+        </View>
+      </Canvas>
       <header className={`header ${scrolled ? "header--scrolled" : ""}`}>
         <div className="header__menu">
           <a href="#hero" className="header__menu__item">
@@ -36,11 +92,11 @@ export const HomePage = () => {
         </div>
       </header>
 
-      <Hero />
+      <Hero ref={heroContainer} />
       <section className="services" id="services">
         <h2 className="services__title">Our Services</h2>
         <div className="services__slider">
-          <div className="services__slider__display"></div>
+          <div className="services__slider__display" ref={serviceContainer}></div>
           <div className="services__slider__list">
             <div
               className={`services__slider__list__service ${
@@ -119,7 +175,7 @@ export const HomePage = () => {
               voluptatibus quia quos molestiae natus?”
             </p>
           </div>
-          <div className="team__member__display team__member__display--blue"></div>
+          <div className="team__member__display team__member__display--blue" ref={johnContainer}></div>
         </div>
         <div className="team__member team__member--reverse">
           <div className="team__member__body">
@@ -131,7 +187,7 @@ export const HomePage = () => {
               voluptatibus quia quos molestiae natus?”
             </p>
           </div>
-          <div className="team__member__display team__member__display--pink"></div>
+          <div className="team__member__display team__member__display--pink" ref={juliaContainer}></div>
         </div>
         <div className="team__member">
           <div className="team__member__body">
@@ -143,7 +199,7 @@ export const HomePage = () => {
               voluptatibus quia quos molestiae natus?”
             </p>
           </div>
-          <div className="team__member__display team__member__display--orange"></div>
+          <div className="team__member__display team__member__display--orange" ref={lindaContainer}></div>
         </div>
       </section>
       <section className="portfolio" id="portfolio">
@@ -152,7 +208,7 @@ export const HomePage = () => {
           We have worked on amazing projects for our clients. Here are some of
           them.
         </p>
-        <div className="portfolio__display"></div>
+        <div className="portfolio__display" ref={portfolioContainer}></div>
       </section>
       <section className="contact" id="contact">
         <h2 className="contact__title">Contact Us</h2>
